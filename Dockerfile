@@ -27,9 +27,9 @@ RUN mkdir -p /tmp/setup
 COPY --chown=$USER:$USER_GROUP ./setup /tmp/setup
 
 WORKDIR /tmp/setup
-RUN elm install "finos/morphir-elm" 
+RUN echo "y" | elm install "finos/morphir-elm" 
 
-#WORKDIR /home/$USER/workspace
+WORKDIR /home/$USER/workspace
 
 
 # ENTRYPOINT [ "morphir-elm" ]
