@@ -1,0 +1,7 @@
+{
+    "name": "Morphir.Example",
+    "sourceDirectory":"src/elm",
+    "exposedModules":[
+        "Hello"
+    ]
+}
