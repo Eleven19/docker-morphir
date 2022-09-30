@@ -1,0 +1,10 @@
+{
+  "image": "eleven19/morphir-dev-env:0.0.8-alpine",
+  "customizations": {
+    "vscode": {
+      "extensions": ["Elmtooling.elm-ls-vscode"]
+    }
+  },
+  "forwardPorts": [3000, 8000],
+  "remoteUser": "vscode"
+}
