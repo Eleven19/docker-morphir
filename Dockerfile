@@ -1,12 +1,22 @@
-FROM node:16 as node_base
+FROM node:16-alpine as node_base
 
-ARG USER_GROUP=5000
-ARG USER=git
+RUN apk update && \
+    apk add bash build-base curl file git gzip sudo && \
+    apk add nushell --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing/ --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main && \
+    rm -rf /var/lib/apt/lists/*    
+
+ARG USER_GROUP=developer
+ARG USER=morphirdev
 
 RUN \
-    groupadd -g $USER_GROUP $USER && \
-    useradd -u $USER_GROUP -g $USER $USER -m && \
-    chown -R $USER:$USER /home/$USER
+    addgroup -S $USER_GROUP && \
+    adduser -S $USER -G $USER_GROUP && \
+    chown -R $USER:$USER_GROUP /home/$USER
+
+# RUN bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)" && \
+#     PATH=$HOME/.linuxbrew/bin:$HOME/.linuxbrew/sbin:$PATH    
+
+# RUN brew update && brew doctor
 
 FROM node_base as morphir_elm
 
@@ -19,6 +29,7 @@ RUN curl -L -o elm.gz https://github.com/elm/compiler/releases/download/0.19.1/b
 RUN npm install -g elm-test
 RUN npm install -g elm-format
 RUN npm install -g elm-review
+RUN npm install -g elm-live
 
 # Expose the morphir-elm develop port
 EXPOSE 3000
@@ -41,6 +52,7 @@ RUN elm-test
 
 WORKDIR /home/$USER/workspace
 
+EXPOSE 8000
 
 # ENTRYPOINT [ "morphir-elm" ]
-ENTRYPOINT ["/bin/bash"]
+CMD ["nu"]
